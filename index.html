@@ -61,39 +61,40 @@
             z-index: 11;
         }
 
-        /* Sekcja iframe */
-        #iframe-container {
-            display: none;
+        /* Przycisk do obrazka (przeźroczysty) */
+        #back-button {
+            position: absolute;
+            top: 603px;
+            left: 708px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0);
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Obrazek (GIF) - strona 2 */
+        #new-image {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 80%;
-            height: 80%;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            border-radius: 10px;
+            display: none;
+            width: 500px;
+            height: auto;
+            border: 3px solid #fff;
         }
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        #close-iframe {
+        /* Specjalny GIF - strona 3 */
+        #special-gif {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            background: #fff;
-            border: none;
-            cursor: pointer;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            text-align: center;
+            top: calc(50% + 100px); /* Przesunięcie w górę */
+            left: calc(50% + 400px); /* Przesunięcie w prawo */
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: auto;
+            display: none;
+            z-index: 10;
         }
 
         /* Responsywność */
@@ -122,28 +123,32 @@
 <body>
     <div id="main-container">
         <!-- Gwiazdki jako klikalne pola -->
-        <div class="star star1" onclick="openIframe('https://example1.com')"></div>
-        <div class="star star2" onclick="openIframe('https://example2.com')"></div>
-        <div class="star star3" onclick="openIframe('https://example3.com')"></div>
-        <div class="star star4" onclick="openIframe('https://example4.com')"></div>
-        <div class="star star5" onclick="openIframe('https://example5.com')"></div>
-        <div class="star star6" onclick="openIframe('https://example6.com')"></div>
-        <div class="star star7" onclick="openIframe('https://example7.com')"></div>
-        <div class="star star8" onclick="openIframe('https://example8.com')"></div>
-        <div class="star star9" onclick="openIframe('https://example9.com')"></div>
+        <div class="star star1" onclick="changePage(1)"></div>
+        <div class="star star2" onclick="activateStar2Page()"></div>
+        <div class="star star3" onclick="changePage(3)"></div>
+        <div class="star star4" onclick="changePage(4)"></div>
+        <div class="star star5" onclick="changePage(5)"></div>
+        <div class="star star6" onclick="changePage(6)"></div>
+        <div class="star star7" onclick="changePage(7)"></div>
+        <div class="star star8" onclick="changePage(8)"></div>
+        <div class="star star9" onclick="changePage(9)"></div>
 
         <!-- Strzałka do cofnięcia -->
         <button id="back-arrow" onclick="goBackToPreviousPage()">&larr;</button>
 
-        <!-- Sekcja iframe -->
-        <div id="iframe-container">
-            <button id="close-iframe" onclick="closeIframe()">&times;</button>
-            <iframe id="iframe" src=""></iframe>
-        </div>
+        <!-- Przycisk do obrazka (przeźroczysty, strona 2) -->
+        <button id="back-button" onclick="showNewImage()"></button>
+
+        <!-- Obrazek (GIF) - strona 2 -->
+        <img id="new-image" src="new_image.gif" alt="Nowy obrazek">
+
+        <!-- Specjalny GIF - strona 3 -->
+        <img id="special-gif" src="special_image.gif" alt="Specjalny obrazek">
     </div>
 
     <script>
         let previousPage = null; // Przechowuje numer poprzedniej strony
+        let star2Clicked = false; // Flaga dla gwiazdki 2
 
         function changePage(pageNumber) {
             console.log(`Przejście do strony: ${pageNumber}`);
@@ -157,24 +162,31 @@
             const newImagePath = `page${pageNumber}.png`;
             container.style.backgroundImage = `url('${newImagePath}')`;
 
+            // Ukryj GIF-y na innych stronach
+            document.getElementById('new-image').style.display = 'none';
+            document.getElementById('special-gif').style.display = 'none';
+
+            // Wyświetl specjalny GIF na stronie 3
+            if (pageNumber === 3) {
+                document.getElementById('special-gif').style.display = 'block';
+            }
+
             // Aktualizacja poprzedniej strony
             previousPage = pageNumber;
         }
 
-        function openIframe(url) {
-            const iframe = document.getElementById('iframe');
-            const iframeContainer = document.getElementById('iframe-container');
-
-            iframe.src = url; // Ustawienie URL do iframe
-            iframeContainer.style.display = 'block'; // Pokazanie iframe
+        function activateStar2Page() {
+            changePage(2);
+            star2Clicked = true;
+            document.getElementById('back-button').style.display = 'block';
         }
 
-        function closeIframe() {
-            const iframeContainer = document.getElementById('iframe-container');
-            const iframe = document.getElementById('iframe');
-
-            iframe.src = ''; // Wyczyść iframe
-            iframeContainer.style.display = 'none'; // Ukrycie iframe
+        function showNewImage() {
+            if (star2Clicked) {
+                document.getElementById('new-image').style.display = 'block';
+            } else {
+                alert("Kliknij najpierw gwiazdkę 2, aby uzyskać dostęp do obrazu!");
+            }
         }
 
         function goBackToPreviousPage() {
