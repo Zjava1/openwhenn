@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes of the Love</title>
+    <style>
+        /* Styl ogólny */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #400000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Główne tło */
+        #main-container {
+            width: 1366px;
+            height: 768px;
+            background-image: url('Bez nazwy-1_Obszar roboczy 1.png');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* Gwiazdki */
+        .star {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0);
+        }
+
+        /* Pozycje gwiazdek */
+        .star1 { top: 232px; left: 76px; }   
+        .star2 { top: 232px; left: 224px; }  
+        .star3 { top: 232px; left: 374px; }   
+        .star4 { top: 384px; left: 71px; }   
+        .star5 { top: 384px; left: 220px; }  
+        .star6 { top: 384px; left: 372px; }  
+        .star7 { top: 537px; left: 80px; }   
+        .star8 { top: 537px; left: 225px; }   
+        .star9 { top: 537px; left: 378px; }  
+
+        /* Strzałka do cofnięcia */
+        #back-arrow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.6);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            z-index: 11;
+        }
+
+        /* Sekcja iframe */
+        #iframe-container {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        #close-iframe {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            background: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+        }
+
+        /* Responsywność */
+        @media screen and (max-width: 1366px) {
+            #main-container {
+                transform: scale(0.9);
+                transform-origin: top left;
+            }
+        }
+
+        @media screen and (max-width: 1024px) {
+            #main-container {
+                transform: scale(0.75);
+                transform-origin: top left;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            #main-container {
+                transform: scale(0.5);
+                transform-origin: top left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <!-- Gwiazdki jako klikalne pola -->
+        <div class="star star1" onclick="openIframe('https://example1.com')"></div>
+        <div class="star star2" onclick="openIframe('https://example2.com')"></div>
+        <div class="star star3" onclick="openIframe('https://example3.com')"></div>
+        <div class="star star4" onclick="openIframe('https://example4.com')"></div>
+        <div class="star star5" onclick="openIframe('https://example5.com')"></div>
+        <div class="star star6" onclick="openIframe('https://example6.com')"></div>
+        <div class="star star7" onclick="openIframe('https://example7.com')"></div>
+        <div class="star star8" onclick="openIframe('https://example8.com')"></div>
+        <div class="star star9" onclick="openIframe('https://example9.com')"></div>
+
+        <!-- Strzałka do cofnięcia -->
+        <button id="back-arrow" onclick="goBackToPreviousPage()">&larr;</button>
+
+        <!-- Sekcja iframe -->
+        <div id="iframe-container">
+            <button id="close-iframe" onclick="closeIframe()">&times;</button>
+            <iframe id="iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        let previousPage = null; // Przechowuje numer poprzedniej strony
+
+        function changePage(pageNumber) {
+            console.log(`Przejście do strony: ${pageNumber}`);
+
+            const container = document.getElementById('main-container');
+            if (!previousPage) {
+                previousPage = 1; // Ustaw poprzednią stronę na 1, jeśli brak
+            }
+
+            // Zmień tło na podstawie numeru strony
+            const newImagePath = `page${pageNumber}.png`;
+            container.style.backgroundImage = `url('${newImagePath}')`;
+
+            // Aktualizacja poprzedniej strony
+            previousPage = pageNumber;
+        }
+
+        function openIframe(url) {
+            const iframe = document.getElementById('iframe');
+            const iframeContainer = document.getElementById('iframe-container');
+
+            iframe.src = url; // Ustawienie URL do iframe
+            iframeContainer.style.display = 'block'; // Pokazanie iframe
+        }
+
+        function closeIframe() {
+            const iframeContainer = document.getElementById('iframe-container');
+            const iframe = document.getElementById('iframe');
+
+            iframe.src = ''; // Wyczyść iframe
+            iframeContainer.style.display = 'none'; // Ukrycie iframe
+        }
+
+        function goBackToPreviousPage() {
+            if (previousPage && previousPage !== 1) {
+                const temp = previousPage;
+                previousPage = 1; // Przywróć poprzednią stronę na stronę główną po cofnięciu
+                changePage(temp);
+            } else {
+                changePage(1);
+            }
+        }
+
+        // Wyświetl stronę główną na start
+        window.onload = () => {
+            changePage(1);
+        };
+    </script>
+</body>
+</html>
